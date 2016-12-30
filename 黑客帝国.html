@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>黑客帝国</title>
+</head>
+<body>
+	<canvas id="canvas" width="300" height="300"></canvas>
+	<script type="text/javascript">
+		var canvas = document.getElementById('canvas');
+		var ctx = canvas.getContext('2d');
+
+		var W, H;
+
+		window.onresize = function(){
+			W = canvas.width = window.innerWidth;
+			H = canvas.height = window.innerHeight;
+		}
+
+		window.onresize();
+
+		var words = '0987654321qwertyuiop[]\asdffghjkll;zxcvbnm,.{[]asdfsas';
+		var wordsArr = words.split('');
+
+		var fontSize = 16;
+		var colums = W / 16
+
+		var drop = [];
+
+		for(var i=0; i<colums; i++){
+			drop[i] = 0;
+		}
+
+		function update(){
+			ctx.save();
+			ctx.font = '16px Arial';
+			ctx.fillStyle = 'rgb(51, 255, 51)';
+			for(var i=0; i<drop.length; i++){
+				var t = wordsArr[Math.floor(Math.random() * wordsArr.length)];
+				ctx.fillText(t, i*fontSize, drop[i]*fontSize);
+				if(drop[i] * fontSize > H && Math.random() > 0.9){
+					drop[i] = 0;
+				}
+				drop[i]++;
+			}
+
+			ctx.restore();
+		}
+
+		function render(){
+			ctx.globalCompositeOperation = 'source-over';
+			ctx.fillStyle = 'rgba(0, 0, 0, .2)';
+			ctx.fillRect(0, 0, W, H);
+			ctx.globalCompositeOperation = 'lighter';
+			update();
+			window.requestAnimationFrame(render);
+		}
+
+		window.requestAnimationFrame(render);
+
+	</script>
+</body>
+</html>
